@@ -15,10 +15,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "username": process.env.JAWSDB_USERNAME,
+    "password": process.env.JAWSDB_PASSWORD,
+    "database": process.env.JAWSDB_DB,
+    "host": process.env.JAWSDB_HOST,
     "dialect": "mysql"
   }
 }
