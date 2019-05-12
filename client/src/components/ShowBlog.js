@@ -44,7 +44,8 @@ class ShowBlog extends Component {
     const query = {
       current_page: 1,
       category: this.state.category ? this.state.category.value : null,
-      keyword: this.state.content || null,
+      title_keyword: this.state.title || null,
+      content_keyword: this.state.content || null,
     }
     return axios.get(`${API_HOST}/blogs`, {params: query})
     .then(results => {

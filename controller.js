@@ -20,10 +20,13 @@ const getBlog = (req, res) => {
 };
 
 const getBlogs = (req, res) => {
-  const { keyword, page_size, current_page, category } = req.query;
+  const { title_keyword, content_keyword, page_size, current_page, category } = req.query;
   const queryObj = {};
-  if(keyword) {
-    queryObj.content = { [Op.like]: `%${keyword}%` };
+  if(content_keyword) {
+    queryObj.content = { [Op.like]: `%${content_keyword}%` };
+  }
+  if(title_keyword) {
+    queryObj.title = { [Op.like]: `%${title_keyword}%` };
   }
   if(category) {
     queryObj.category = category;
