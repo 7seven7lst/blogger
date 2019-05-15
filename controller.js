@@ -4,13 +4,17 @@ const db = require('./models');
 const { Op } = require('sequelize');
 
 const getBlog = (req, res) => {
-  const blogId = req.params.blog_id;
+  const { blog_id } = req.params;
   let queryObj = {
     where: {
-      id: blogId
+      id: blog_id
     },
   };
-  return db.Blog.findOne(queryObj)
+  return db.sequelize.query("UPDATE blogs SET visit_count = visit_count+1 WHERE id =?",
+  { replacements: [blog_id], type: db.sequelize.QueryTypes.UPDATE })
+  .then(() => {
+    return db.Blog.findOne(queryObj)
+  })
   .then(blog => {
     res.json(blog);
   })
@@ -33,7 +37,7 @@ const getBlogs = (req, res) => {
   }
   const options = {
     page: +current_page || 1, // Default 1
-    paginate: +page_size || 10, // default to 10
+    paginate: +page_size || 6, // default to 6
     order: [['visit_count', 'DESC']],
     where: queryObj,
   };
@@ -45,6 +49,21 @@ const getBlogs = (req, res) => {
     console.log("error querying blogs>>", err);
   })
 };
+
+const getPopularBlogs = (req, res) => {
+  const { limit } = req.query;
+  const options = {
+    order: [['visit_count', 'DESC']],
+    limit: limit ? +limit : 5,
+  };
+  return db.Blog.findAll(options)
+  .then(results => {
+    res.json(results);
+  })
+  .catch(err => {
+    console.log("error querying blogs>>", err);
+  })
+}
 
 const createBlog = (req, res) => {
   const newBlog = req.body;
@@ -94,10 +113,10 @@ const deleteBlog = (req, res) => {
   })
 }
 
-
 module.exports = {
   getBlog,
   getBlogs,
+  getPopularBlogs,
   createBlog,
   updateBlog,
   deleteBlog,

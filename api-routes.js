@@ -2,6 +2,7 @@ const router = require('express').Router();
 const blogsController = require('./controller');
 
 router
+  .get('/blogs/popular', blogsController.getPopularBlogs)
   .get('/blogs', blogsController.getBlogs)
   .get('/blogs/:blog_id', blogsController.getBlog)
   .post('/blogs', blogsController.createBlog)

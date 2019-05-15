@@ -34,6 +34,7 @@ const categories = [
 class PostBlog extends Component {
   state = {
     title: '',
+    image_url: '',
     content: '',
     category: '',
   }
@@ -42,6 +43,7 @@ class PostBlog extends Component {
     e.preventDefault();
     const newBlog = {
       title: this.state.title,
+      image_url: this.state.image_url,
       content: this.state.content,
       category: this.state.category.value,
     };
@@ -71,6 +73,17 @@ class PostBlog extends Component {
                 value={this.state.title}
                 onChange={e => this.setState({ title: e.target.value})}
                />
+            </FormGroup>
+            <FormGroup>
+              <Label for="exampleTitle">Image Url</Label>
+              <Input
+                type="text"
+                name="imageurl"
+                id="exampleImageUrl"
+                placeholder="Please enter blog image url"
+                value={this.state.image_url}
+                onChange={e => this.setState({ image_url: e.target.value})}
+              />
             </FormGroup>
             <FormGroup>
               <Label for="exampleContent">Content</Label>

@@ -15,7 +15,10 @@ module.exports = {
         type: Sequelize.TEXT
       },
       category: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+      },
+      image_url: {
+        type: Sequelize.STRING,
       },
       visit_count: {
         type: Sequelize.INTEGER,
