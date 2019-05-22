@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import _ from 'lodash';
 import Select from 'react-select';
 import { Container, Row, Col, Button, Form, FormGroup, Label, Input, CardColumns, Card, CardHeader, CardBody, CardText } from 'reactstrap';
@@ -40,7 +42,7 @@ class ShowBlog extends Component {
     blogs: []
   }
   startSearch = e => {
-    e.preventDefault();
+    if(e) e.preventDefault();
     const query = {
       current_page: 1,
       category: this.state.category ? this.state.category.value : null,
@@ -49,10 +51,20 @@ class ShowBlog extends Component {
     }
     return axios.get(`${API_HOST}/blogs`, {params: query})
     .then(results => {
-      console.log("results is >>>", results);
       let blogs = results.data.docs;
       let page = results.data.pages;
       this.setState({blogs: blogs});
+    })
+    .catch(err => {
+      console.log("err is >>>", err);
+    })
+  }
+
+  handleDelete = blog => {
+    return axios.delete(`${API_HOST}/blogs/${blog.id}`)
+    .then(() => {
+      toast.info("🔔blog successfully deleted");
+      return this.startSearch();
     })
     .catch(err => {
       console.log("err is >>>", err);
@@ -119,6 +131,8 @@ class ShowBlog extends Component {
                   <CardText>
                     {blog.content}
                   </CardText>
+                  <Link to={`/blog/edit/${blog.id}`}><Button>Update Blog</Button></Link>
+                  <Button onClick={()=>this.handleDelete(blog)}>Delete Blog</Button>
                 </CardBody>
               </Card>
             ))}

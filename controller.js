@@ -1,7 +1,23 @@
 const Promise = require('bluebird');
+const cloudinary = require('cloudinary');
 const _ = require('lodash');
 const db = require('./models');
 const { Op } = require('sequelize');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
+
+const uploadNewImage = (req, res) => {
+  //const path = Object.values(Object.values(req.files)[0])[0].path
+  const value = Object.values(req.files)[0]
+  return cloudinary.uploader.upload(value.path)
+  .then(result => {
+    res.json(result);
+  })
+}
 
 const getBlog = (req, res) => {
   const { blog_id } = req.params;
@@ -67,7 +83,8 @@ const getPopularBlogs = (req, res) => {
 
 const createBlog = (req, res) => {
   const newBlog = req.body;
-  return db.Blog.create(newBlog)
+  console.log("newBlog is >>>", newBlog);
+  return db.Blog.create(_.omit(newBlog, 'image'))
   .then(response => {
     console.log(response);
     res.json(response);
@@ -114,6 +131,7 @@ const deleteBlog = (req, res) => {
 }
 
 module.exports = {
+  uploadNewImage,
   getBlog,
   getBlogs,
   getPopularBlogs,

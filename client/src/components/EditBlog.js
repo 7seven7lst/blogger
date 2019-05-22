@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
-import FormData from 'form-data';
+import { withRouter } from 'react-router';
 import axios from 'axios';
 import Select from 'react-select';
-import Editor from 'tui-editor';
 import { toast } from 'react-toastify';
 import { Container, Row, Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
-
-import ToastEditor from './toastEditor';
-import ImageUpload from './ImageUploader';
 
 import API_HOST from '../config';
 const categories = [
@@ -37,39 +33,45 @@ const categories = [
   },
 ];
 
-class PostBlog extends Component {
+class EditBlog extends Component {
   state = {
     title: '',
-    image: [],
+    image_url: '',
     content: '',
     category: '',
   }
 
-  handleSubmit = e => {
-    console.log("this.state is >>>", this.state)
-    e.preventDefault();
-    let form = new FormData();
-    const file = Array.from(this.state.image)[0];
-    form.append('image', file);
+  componentDidMount() {
+    const { match } = this.props;
+    const id = parseInt(match.params.id);
+    return axios.get(`${API_HOST}/blogs/${id}`)
+    .then(result => {
+      let blog = result.data;
+      console.log("blog is >>>", blog)
+      this.setState({
+        title: blog.title,
+        image_url: blog.image_url,
+        content: blog.content,
+        category: { label: blog.category, value: blog.category}
+      });
+    })
+    .catch(err => {
+      console.log("err is >>>", err);
+    })
+  }
 
-    return fetch(`${API_HOST}/upload-image`, {
-      method: 'POST',
-      body: form
-    })
-    .then(res => res.json())
-    .then(response =>{
-      console.log('response >>>', response);
-      let image_url = response.secure_url;
-      //let arr = image_url.split("upload");
-      //let new_image_url = `${arr[0]}upload/w_1111,h_819,c_scale${arr[1]}`;
-      const newBlog = {
-        title: this.state.title,
-        image_url: image_url,
-        content: this.state.content,
-        category: this.state.category.value,
-      };
-      return axios.post(`${API_HOST}/blogs`, newBlog);
-    })
+  handleSubmit = e => {
+    const { match } = this.props;
+    const id = parseInt(match.params.id);
+    e.preventDefault();
+    const updatedBlog = {
+      title: this.state.title,
+      image_url: this.state.image_url,
+      content: this.state.content,
+      category: this.state.category.value,
+    };
+
+    return axios.put(`${API_HOST}/blogs/${id}`, updatedBlog)
     .then(response => {
       console.log("posting new Blog response is>>>", response);
       toast.info("🔔 blog successfully added");
@@ -78,16 +80,6 @@ class PostBlog extends Component {
       console.log("err posting new blog is >>>", err);
     });
   }
-
-  updateContent = content => {
-    this.setState({content: content});
-  }
-
-  updateImage = e => {
-    const files = Array.from(e.target.files)
-    this.setState({image: files});
-  }
-
   render() {
     return (
       <Container fluid className="mt-3">
@@ -106,6 +98,27 @@ class PostBlog extends Component {
                />
             </FormGroup>
             <FormGroup>
+              <Label for="exampleTitle">Image Url</Label>
+              <Input
+                type="text"
+                name="imageurl"
+                id="exampleImageUrl"
+                placeholder="Please enter blog image url"
+                value={this.state.image_url}
+                onChange={e => this.setState({ image_url: e.target.value})}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="exampleContent">Content</Label>
+              <Input
+                style={{height: 400}}
+                type="textarea"
+                name="password"
+                id="exampleContent"
+                placeholder="Please enter blog content"
+                value={this.state.content}
+                onChange={e => this.setState({ content: e.target.value})}
+              />
             </FormGroup>
             <FormGroup>
               <Label for="exampleSelect">Category</Label>
@@ -117,14 +130,7 @@ class PostBlog extends Component {
                 options={categories}
               />
             </FormGroup>
-            <FormGroup>
-              <Label for="multi">Image</Label><br />
-              <input type='file' id='multi' onChange={this.updateImage} multiple />
-            </FormGroup>
-            <FormGroup>
-              <ToastEditor updateContent={this.updateContent} />
-            </FormGroup>
-            {/*<Button>Submit</Button>*/}
+            <Button>Submit</Button>
           </Form>
           </Col>
         </Row>
@@ -133,4 +139,4 @@ class PostBlog extends Component {
   }
 }
 
-export default PostBlog;
+export default withRouter(EditBlog);

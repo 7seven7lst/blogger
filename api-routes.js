@@ -2,6 +2,7 @@ const router = require('express').Router();
 const blogsController = require('./controller');
 
 router
+  .post('/upload-image', blogsController.uploadNewImage)
   .get('/blogs/popular', blogsController.getPopularBlogs)
   .get('/blogs', blogsController.getBlogs)
   .get('/blogs/:blog_id', blogsController.getBlog)

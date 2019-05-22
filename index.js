@@ -1,4 +1,7 @@
+require('dotenv').config()
 const express = require('express');
+const cloudinary = require('cloudinary');
+const formData = require('express-form-data');
 const passport = require('passport');
 const bodyParser = require("body-parser");
 const logger = require('morgan');
@@ -10,6 +13,7 @@ const apiRoutes = require('./api-routes');
 
 const app = express();
 app.use(cors());
+app.use(formData.parse());
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text());
