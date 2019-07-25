@@ -26,7 +26,7 @@ Get front end running in Mac OSX
 Running back end
 
 * Install dependencies
-  1. cd into dashboard, and `yarn install`
+  1. cd into `client`, and `yarn install`
   2. `yarn global add sequelize-cli`
   3. `yarn global add nodemon`
 
@@ -35,7 +35,8 @@ Running back end
   2. edit username and password in `./config/config.js` file. Environment will be `development`
 
 * Generate Table
-  1. `sequelize db:migrate` to generate the table
+  1. `cd ..` (cd to root directory of this repo)
+  2. `sequelize db:migrate` to generate the table
   3. visit http://docs.sequelizejs.com/manual/tutorial/migrations.html if you need more stuff
 
 * Setting up cloudinary secret
@@ -43,7 +44,7 @@ Running back end
   2. chat with me to find out the cloudinary secret
 
 * Spin up NodeJs Server
-  1. cd into dashboard, and `nodemon index`
+  1. `nodemon index`
   2. the server will start at port 4001
 
 * API endpoint for getting the blogs
