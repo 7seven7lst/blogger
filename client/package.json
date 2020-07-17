@@ -8,7 +8,7 @@
     "classnames": "^2.2.6",
     "form-data": "^2.3.3",
     "immutable": "^4.0.0-rc.9",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "memoize-one": "^4.0.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
