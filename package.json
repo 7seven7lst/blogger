@@ -6,7 +6,7 @@
   "author": "7seven7lst <shengtaoli0110@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bcrypt": "^3.0.2",
     "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
