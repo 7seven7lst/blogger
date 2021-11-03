@@ -29,6 +29,6 @@
     "sequelize": "5.8.5",
     "sequelize-cli": "^2.7.0",
     "sequelize-paginate": "^1.1.6",
-    "validator": "^10.9.0"
+    "validator": "^13.7.0"
   }
 }
